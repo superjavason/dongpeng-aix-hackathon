@@ -1,15 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { DEFAULT_CRITERIA, TRACKS } from "../lib/constants";
+import { computeTotal } from "../lib/scoring";
 
 const prisma = new PrismaClient();
-
 const PASSWORD = "password123";
 
 async function main() {
   console.log("🌱 开始播种数据…");
 
-  // 清空（按依赖顺序）
   await prisma.score.deleteMany();
   await prisma.judgeAssignment.deleteMany();
   await prisma.submission.deleteMany();
@@ -20,7 +19,6 @@ async function main() {
 
   const hash = await bcrypt.hash(PASSWORD, 10);
 
-  // 用户
   const admin = await prisma.user.create({
     data: {
       name: "平台管理员",
@@ -37,23 +35,13 @@ async function main() {
       { name: "王总监", email: "judge2@dongpeng.com", bio: "产品与商业化负责人" },
       { name: "陈工", email: "judge3@dongpeng.com", bio: "资深架构师" },
     ].map((j) =>
-      prisma.user.create({
-        data: { ...j, passwordHash: hash, role: "judge" },
-      })
+      prisma.user.create({ data: { ...j, passwordHash: hash, role: "judge" } })
     )
   );
 
-  const participants = await Promise.all(
-    [
-      "张三",
-      "李四",
-      "王五",
-      "赵六",
-      "钱七",
-      "孙八",
-      "周九",
-      "吴十",
-    ].map((name, i) =>
+  const names = ["张三", "李四", "王五", "赵六", "钱七", "孙八", "周九", "吴十", "郑十一", "冯十二"];
+  const users = await Promise.all(
+    names.map((name, i) =>
       prisma.user.create({
         data: {
           name,
@@ -65,7 +53,6 @@ async function main() {
     )
   );
 
-  // 赛事（当前活跃，处于报名组队中阶段）
   const now = new Date();
   const event = await prisma.event.create({
     data: {
@@ -82,96 +69,176 @@ async function main() {
     },
   });
 
-  // 项目 1：发起人 张三，已组队
-  const p1 = await prisma.project.create({
-    data: {
-      eventId: event.id,
-      ownerId: participants[0].id,
+  // 项目定义：owner 索引、approved 成员索引、pending 成员索引、是否有作品
+  const defs = [
+    {
       title: "智能瓷砖排版助手",
       tagline: "用 AI 一键生成最优瓷砖铺贴方案",
       description:
         "面向门店导购与设计师，输入空间尺寸与风格偏好，AI 自动生成多套铺贴排版与用量清单，降低损耗、提升成单率。",
       track: TRACKS[0],
-      maxMembers: 4,
-    },
-  });
-  await prisma.membership.create({
-    data: {
-      projectId: p1.id,
-      userId: participants[0].id,
-      status: "approved",
-      teamRole: "owner",
-    },
-  });
-  await prisma.membership.createMany({
-    data: [
-      { projectId: p1.id, userId: participants[1].id, status: "approved" },
-      {
-        projectId: p1.id,
-        userId: participants[2].id,
-        status: "pending",
-        message: "我擅长前端与三维可视化，想加入！",
+      owner: 0,
+      approved: [1],
+      pending: [2],
+      sub: {
+        title: "智能瓷砖排版助手 v1",
+        summary: "已完成排版算法与门店小程序原型，损耗率平均降低 12%，导购可一键出方案并生成用量清单。",
+        repoUrl: "https://github.com/dongpeng/tile-layout",
+        demoUrl: "https://demo.dongpeng.com/tile",
       },
-    ],
-  });
-
-  // 项目 2：发起人 赵六，招募中
-  const p2 = await prisma.project.create({
-    data: {
-      eventId: event.id,
-      ownerId: participants[3].id,
+    },
+    {
       title: "导购话术 AI 教练",
       tagline: "实时分析对话，给出最佳销售建议",
       description:
         "结合门店知识库与大模型，为一线导购提供实时话术建议与产品推荐，沉淀优秀案例，缩短新人成长周期。",
       track: TRACKS[1],
-      maxMembers: 3,
+      owner: 3,
+      approved: [4],
+      pending: [5],
+      sub: {
+        title: "导购话术 AI 教练",
+        summary: "实现实时语音转写 + 话术建议，接入门店知识库；试点门店成单率提升 8%。",
+        repoUrl: "https://github.com/dongpeng/sales-coach",
+      },
     },
-  });
-  await prisma.membership.create({
-    data: {
-      projectId: p2.id,
-      userId: participants[3].id,
-      status: "approved",
-      teamRole: "owner",
-    },
-  });
-  await prisma.membership.create({
-    data: {
-      projectId: p2.id,
-      userId: participants[4].id,
-      status: "pending",
-      message: "想负责数据与后端。",
-    },
-  });
-
-  // 项目 3：发起人 周九
-  const p3 = await prisma.project.create({
-    data: {
-      eventId: event.id,
-      ownerId: participants[6].id,
+    {
       title: "AI 空间风格生成器",
       tagline: "拍一张照，生成整屋装修效果",
       description:
         "上传毛坯或现状照片，AI 输出多种风格的整屋效果图，并关联东鹏产品 SKU，打通灵感到下单的链路。",
       track: TRACKS[2],
-      maxMembers: 5,
+      owner: 6,
+      approved: [7, 8],
+      pending: [],
+      sub: {
+        title: "AI 空间风格生成器",
+        summary: "基于扩散模型的整屋风格迁移，支持 6 种风格，自动匹配东鹏 SKU 并生成购物清单。",
+        demoUrl: "https://demo.dongpeng.com/space",
+        videoUrl: "https://demo.dongpeng.com/space/video",
+      },
     },
-  });
-  await prisma.membership.create({
-    data: {
-      projectId: p3.id,
-      userId: participants[6].id,
-      status: "approved",
-      teamRole: "owner",
+    {
+      title: "工厂能耗智能优化",
+      tagline: "AI 预测调度，节能降碳",
+      description:
+        "采集窑炉与产线能耗数据，用时序模型预测并优化调度策略，目标降低单位产品能耗。",
+      track: TRACKS[0],
+      owner: 9,
+      approved: [0],
+      pending: [],
+      sub: {
+        title: "工厂能耗智能优化平台",
+        summary: "时序预测 + 调度优化，模拟环境下窑炉能耗下降 9.5%，已对接 IoT 数据看板。",
+        repoUrl: "https://github.com/dongpeng/energy-ai",
+      },
     },
-  });
+    {
+      title: "AI 客服知识中枢",
+      tagline: "让售后问题秒级响应",
+      description:
+        "构建统一的产品知识库与检索增强问答，覆盖安装、保养、售后场景，降低人工客服压力。",
+      track: TRACKS[3],
+      owner: 1,
+      approved: [],
+      pending: [3],
+      sub: null,
+    },
+  ];
+
+  const criteria = DEFAULT_CRITERIA;
+  const submissionsForScore: { id: string }[] = [];
+
+  for (const d of defs) {
+    const project = await prisma.project.create({
+      data: {
+        eventId: event.id,
+        ownerId: users[d.owner].id,
+        title: d.title,
+        tagline: d.tagline,
+        description: d.description,
+        track: d.track,
+        maxMembers: 4,
+        memberships: {
+          create: [
+            { userId: users[d.owner].id, status: "approved", teamRole: "owner" },
+            ...d.approved.map((i) => ({
+              userId: users[i].id,
+              status: "approved" as const,
+              teamRole: "member" as const,
+            })),
+            ...d.pending.map((i) => ({
+              userId: users[i].id,
+              status: "pending" as const,
+              teamRole: "member" as const,
+              message: "我想加入贡献力量！",
+            })),
+          ],
+        },
+      },
+    });
+
+    if (d.sub) {
+      const submission = await prisma.submission.create({
+        data: {
+          projectId: project.id,
+          title: d.sub.title,
+          summary: d.sub.summary,
+          repoUrl: d.sub.repoUrl ?? null,
+          demoUrl: d.sub.demoUrl ?? null,
+          videoUrl: d.sub.videoUrl ?? null,
+          images: [],
+          attachments: [],
+        },
+      });
+      submissionsForScore.push(submission);
+    }
+  }
+
+  // 预置部分评分（演示评审进度与排行榜数据，phase 切到 evaluating/ended 即可见）
+  const scoreSets = [
+    { innovation: 92, technical: 88, business: 85, completeness: 90 },
+    { innovation: 85, technical: 90, business: 80, completeness: 86 },
+    { innovation: 95, technical: 92, business: 90, completeness: 93 },
+    { innovation: 80, technical: 85, business: 78, completeness: 82 },
+  ];
+  // judge1 评前 3 个作品，judge2 评前 2 个作品
+  for (let i = 0; i < submissionsForScore.length; i++) {
+    const sub = submissionsForScore[i];
+    if (i < 3) {
+      const s = scoreSets[i % scoreSets.length];
+      await prisma.score.create({
+        data: {
+          submissionId: sub.id,
+          judgeId: judges[0].id,
+          scores: s,
+          total: computeTotal(s, criteria),
+          comment: "整体完成度高，落地价值明显。",
+        },
+      });
+    }
+    if (i < 2) {
+      const s = scoreSets[(i + 1) % scoreSets.length];
+      await prisma.score.create({
+        data: {
+          submissionId: sub.id,
+          judgeId: judges[1].id,
+          scores: s,
+          total: computeTotal(s, criteria),
+          comment: "商业价值突出，建议补充技术细节。",
+        },
+      });
+    }
+  }
 
   console.log("✅ 播种完成");
   console.log("\n演示账号（密码均为 password123）：");
   console.log(`  管理员: ${admin.email}`);
   console.log(`  评委:   ${judges.map((j) => j.email).join(", ")}`);
-  console.log(`  参赛者: user1@dongpeng.com … user8@dongpeng.com`);
+  console.log(`  参赛者: user1@dongpeng.com … user10@dongpeng.com`);
+  console.log(
+    `\n赛事当前阶段：报名组队中（registration）。在「管理员后台 → 赛事设置」可切换阶段以演示作品提交 / 评委打分 / 排行榜。`
+  );
 }
 
 main()
