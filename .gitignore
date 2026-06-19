@@ -10,3 +10,6 @@ build
 next-env.d.ts
 coverage
 prisma/*.db
+
+# 本地上传回落目录
+public/uploads
