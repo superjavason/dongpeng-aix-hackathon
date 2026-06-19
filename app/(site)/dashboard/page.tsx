@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { Crown, Inbox, Rocket, ClipboardList } from "lucide-react";
+import { Crown, Inbox, Rocket, ClipboardList, Trophy } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 import { getActiveEvent } from "@/lib/event";
+import { getRankedSubmissions } from "@/lib/leaderboard";
 import { PHASE_LABELS, MEMBERSHIP_LABELS } from "@/lib/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -42,6 +43,20 @@ export default async function DashboardPage() {
     orderBy: { createdAt: "desc" },
   });
 
+  // 我的成绩（结果发布后）
+  const myProjectIds = new Set([
+    ...ownedProjects.map((p) => p.id),
+    ...joined
+      .filter((m) => m.status === "approved")
+      .map((m) => m.project.id),
+  ]);
+  const myResults =
+    event?.resultsPublished
+      ? (await getRankedSubmissions(event.id)).filter((r) =>
+          myProjectIds.has(r.projectId)
+        )
+      : [];
+
   return (
     <main className="container py-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -57,6 +72,45 @@ export default async function DashboardPage() {
           </Badge>
         )}
       </div>
+
+      {/* 我的成绩 */}
+      {myResults.length > 0 && (
+        <section className="mt-8">
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
+            <Trophy className="h-5 w-5 text-brand" /> 我的成绩
+          </h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            {myResults.map((r) => (
+              <Card key={r.submissionId} className="border-brand/30">
+                <CardContent className="flex items-center justify-between p-5">
+                  <div>
+                    <Link
+                      href={`/projects/${r.projectId}`}
+                      className="font-medium hover:underline"
+                    >
+                      {r.title}
+                    </Link>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      第 {r.rank} 名 · {r.scoreCount} 位评委评分
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-3xl font-bold text-brand">
+                      {r.average ?? "—"}
+                    </p>
+                    <Link
+                      href="/leaderboard"
+                      className="text-[11px] text-muted-foreground hover:underline"
+                    >
+                      查看排行榜 →
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* 我发起的项目 */}
       <section className="mt-8">
