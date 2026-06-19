@@ -1,0 +1,8 @@
+# 锚定本仓库为独立的 pnpm 根，避免被上层目录的 workspace 接管。
+# 单包项目，无需 packages 列表。
+onlyBuiltDependencies:
+  - "@prisma/client"
+  - "@prisma/engines"
+  - prisma
+  - esbuild
+  - sharp
