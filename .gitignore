@@ -13,3 +13,6 @@ prisma/*.db
 
 # 本地上传回落目录
 public/uploads
+
+# TS build info
+tsconfig.tsbuildinfo
