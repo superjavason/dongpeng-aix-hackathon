@@ -1,6 +1,17 @@
 import { z } from "zod";
 import { TRACKS } from "./constants";
 
+/**
+ * 已上传文件的 URL：生产为 Vercel Blob 绝对地址（https://…），
+ * 本地开发回落为相对路径（/uploads/…）。两者都需通过校验。
+ */
+const storedUrl = z
+  .string()
+  .refine(
+    (v) => v.startsWith("/") || /^https?:\/\//.test(v),
+    "文件链接格式不正确"
+  );
+
 export const registerSchema = z.object({
   name: z.string().min(2, "姓名至少 2 个字").max(30),
   email: z.string().email("请输入有效邮箱"),
@@ -19,7 +30,7 @@ export const projectSchema = z.object({
   description: z.string().min(10, "项目描述至少 10 个字").max(2000),
   track: z.enum(TRACKS as unknown as [string, ...string[]]),
   maxMembers: z.coerce.number().int().min(1).max(10),
-  coverImageUrl: z.string().url().optional().or(z.literal("")),
+  coverImageUrl: storedUrl.optional().or(z.literal("")),
 });
 export type ProjectInput = z.infer<typeof projectSchema>;
 
@@ -33,7 +44,7 @@ export const reviewSchema = z.object({
 
 const attachmentSchema = z.object({
   name: z.string(),
-  url: z.string().url(),
+  url: storedUrl,
 });
 
 export const submissionSchema = z.object({
@@ -42,7 +53,7 @@ export const submissionSchema = z.object({
   repoUrl: z.string().url("请输入有效链接").optional().or(z.literal("")),
   demoUrl: z.string().url("请输入有效链接").optional().or(z.literal("")),
   videoUrl: z.string().url("请输入有效链接").optional().or(z.literal("")),
-  images: z.array(z.string().url()).max(8).default([]),
+  images: z.array(storedUrl).max(8).default([]),
   attachments: z.array(attachmentSchema).max(5).default([]),
 });
 export type SubmissionInput = z.infer<typeof submissionSchema>;
