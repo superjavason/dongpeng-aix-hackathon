@@ -18,7 +18,7 @@ export default function AuthLayout({
             alt="东鹏"
             width={44}
             height={44}
-            className="h-11 w-11 object-contain"
+            className="h-11 w-11 shrink-0 object-contain"
           />
           <span className="text-lg font-bold">东鹏 AI+X 黑客松</span>
         </Link>

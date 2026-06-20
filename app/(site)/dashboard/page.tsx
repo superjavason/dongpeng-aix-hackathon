@@ -166,7 +166,7 @@ export default async function DashboardPage() {
                   <CardContent>
                     {/* 待审报名 */}
                     <div className="rounded-lg border bg-neutral-50/60 p-4">
-                      <p className="flex items-center gap-1.5 text-sm font-medium">
+                      <div className="flex items-center gap-1.5 text-sm font-medium">
                         <Inbox className="h-4 w-4" />
                         待审核报名
                         {pending.length > 0 && (
@@ -174,7 +174,7 @@ export default async function DashboardPage() {
                             {pending.length}
                           </Badge>
                         )}
-                      </p>
+                      </div>
                       {pending.length === 0 ? (
                         <p className="mt-2 text-sm text-muted-foreground">
                           暂无待审核的报名

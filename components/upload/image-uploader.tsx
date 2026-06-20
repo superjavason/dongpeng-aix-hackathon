@@ -51,7 +51,7 @@ export function ImageUploader({
           key={url}
           className="group relative h-24 w-24 overflow-hidden rounded-lg border"
         >
-          <Image src={url} alt="" fill className="object-cover" />
+          <Image src={url} alt="" fill unoptimized className="object-cover" />
           <button
             type="button"
             onClick={() => onChange(value.filter((u) => u !== url))}

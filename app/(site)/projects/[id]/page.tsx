@@ -75,6 +75,7 @@ export default async function ProjectDetailPage({
                 src={project.coverImageUrl}
                 alt={project.title}
                 fill
+                unoptimized
                 className="object-cover"
               />
             ) : (

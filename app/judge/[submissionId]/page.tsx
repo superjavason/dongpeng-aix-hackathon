@@ -98,7 +98,7 @@ export default async function JudgeScorePage({
             <div className="grid grid-cols-2 gap-3">
               {images.map((url) => (
                 <div key={url} className="relative h-44 overflow-hidden rounded-lg border">
-                  <Image src={url} alt="" fill className="object-cover" />
+                  <Image src={url} alt="" fill unoptimized className="object-cover" />
                 </div>
               ))}
             </div>

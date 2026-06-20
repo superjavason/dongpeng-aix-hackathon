@@ -103,7 +103,8 @@ export default async function Home() {
                 alt="东鹏"
                 width={180}
                 height={180}
-                className="relative z-10 drop-shadow-2xl"
+                priority
+                className="relative z-10 object-contain drop-shadow-2xl"
               />
             </div>
           </div>

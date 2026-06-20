@@ -61,14 +61,14 @@ export default async function ProjectsPage({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">项目广场</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <div className="mt-1 flex items-center text-sm text-muted-foreground">
             浏览所有提报项目，找到心仪的队伍报名加入
             {event && (
               <Badge variant="outline" className="ml-2">
                 {PHASE_LABELS[event.phase]}
               </Badge>
             )}
-          </p>
+          </div>
         </div>
         {canCreate && (
           <Button asChild>

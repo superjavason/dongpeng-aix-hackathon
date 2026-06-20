@@ -16,7 +16,7 @@ export async function SiteHeader() {
             alt="东鹏"
             width={36}
             height={36}
-            className="h-9 w-9 object-contain"
+            className="h-9 w-9 shrink-0 object-contain"
           />
           <div className="leading-tight">
             <span className="block text-base font-bold tracking-tight">

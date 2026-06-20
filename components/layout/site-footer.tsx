@@ -8,9 +8,9 @@ export function SiteFooter() {
           <Image
             src="/logo.png"
             alt="东鹏"
-            width={96}
+            width={76}
             height={28}
-            className="h-7 w-auto object-contain"
+            className="h-7 w-auto shrink-0 object-contain"
           />
         </div>
         <p>© 2026 东鹏 AI+X 黑客松组委会 · 科技 · 艺术 · 生活</p>

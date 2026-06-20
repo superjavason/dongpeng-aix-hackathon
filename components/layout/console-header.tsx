@@ -24,7 +24,7 @@ export async function ConsoleHeader({
               alt="东鹏"
               width={32}
               height={32}
-              className="h-8 w-8 object-contain"
+              className="h-8 w-8 shrink-0 object-contain"
             />
           </Link>
           <div className="h-6 w-px bg-border" />
