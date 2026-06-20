@@ -2,7 +2,7 @@
 
 > 科技 · 艺术 · 生活 —— 一个覆盖完整赛事生命周期的黑客松平台：项目提报、自由组队（发起人审核）、作品提交、评委多维度评分、管理员后台。
 
-基于 **Next.js 15 · TypeScript · Tailwind · Prisma · PostgreSQL · Auth.js · Vercel Blob** 构建。
+基于 **Next.js 16 · TypeScript · Tailwind · Prisma · PostgreSQL · Auth.js · Vercel Blob** 构建。
 
 ## 功能概览
 
@@ -89,7 +89,8 @@ pnpm dev
 
 ## 技术要点
 
-- **鉴权**：Auth.js v5 Credentials + JWT，角色写入 session；`middleware.ts` 守卫 `/admin`、`/judge`、`/dashboard`。
+- **鉴权**：Auth.js v5 Credentials + JWT，角色写入 session；`proxy.ts`（Next.js 16 中间件，nodejs 运行时）守卫 `/admin`、`/judge`、`/dashboard`。
+- **构建**：`pnpm build` 使用 webpack 构建器（`next build --webpack`）。Turbopack 生产构建在 16.2.x 存在 page-data 收集的偶发问题，开发模式（`pnpm dev`）仍默认使用 Turbopack。
 - **业务规则**：阶段 × 角色 × 操作的权限矩阵集中在 `lib/permissions.ts`；评分加权在 `lib/scoring.ts`，均有单元测试。
 - **评分**：多维度加权归一到 0–100；最终得分取各评委均分；修改评分维度会自动重算历史总分。
 - **文件存储**：`lib/storage.ts` 封装统一接口，生产走 Vercel Blob，本地回落文件系统。
