@@ -29,7 +29,7 @@ export const projectSchema = z.object({
   tagline: z.string().min(4, "一句话简介至少 4 个字").max(80),
   description: z.string().min(10, "项目描述至少 10 个字").max(2000),
   track: z.enum(TRACKS as unknown as [string, ...string[]]),
-  maxMembers: z.coerce.number().int().min(1).max(10),
+  maxMembers: z.coerce.number().int().min(1).max(5),
   coverImageUrl: storedUrl.optional().or(z.literal("")),
 });
 export type ProjectInput = z.infer<typeof projectSchema>;

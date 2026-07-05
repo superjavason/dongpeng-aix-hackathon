@@ -25,7 +25,7 @@ async function main() {
       email: "admin@dongpeng.com",
       passwordHash: hash,
       role: "admin",
-      bio: "东鹏 AI+X 黑客松组委会",
+      bio: "AI+X黑客松大赛组委会",
     },
   });
 
@@ -56,7 +56,7 @@ async function main() {
   const now = new Date();
   const event = await prisma.event.create({
     data: {
-      name: "东鹏 AI+X 黑客松 2026",
+      name: "AI+X黑客松大赛 2026",
       description:
         "以「AI + X」为主题，鼓励员工与生态伙伴用人工智能重塑制造、营销、设计、办公与体验。科技·艺术·生活，让创新落地。",
       track: "AI+X",
@@ -76,7 +76,7 @@ async function main() {
       tagline: "用 AI 一键生成最优瓷砖铺贴方案",
       description:
         "面向门店导购与设计师，输入空间尺寸与风格偏好，AI 自动生成多套铺贴排版与用量清单，降低损耗、提升成单率。",
-      track: TRACKS[0],
+      track: TRACKS[1],
       owner: 0,
       approved: [1],
       pending: [2],
@@ -107,7 +107,7 @@ async function main() {
       tagline: "拍一张照，生成整屋装修效果",
       description:
         "上传毛坯或现状照片，AI 输出多种风格的整屋效果图，并关联东鹏产品 SKU，打通灵感到下单的链路。",
-      track: TRACKS[2],
+      track: TRACKS[3],
       owner: 6,
       approved: [7, 8],
       pending: [],
@@ -123,7 +123,7 @@ async function main() {
       tagline: "AI 预测调度，节能降碳",
       description:
         "采集窑炉与产线能耗数据，用时序模型预测并优化调度策略，目标降低单位产品能耗。",
-      track: TRACKS[0],
+      track: TRACKS[2],
       owner: 9,
       approved: [0],
       pending: [],
@@ -138,7 +138,7 @@ async function main() {
       tagline: "让售后问题秒级响应",
       description:
         "构建统一的产品知识库与检索增强问答，覆盖安装、保养、售后场景，降低人工客服压力。",
-      track: TRACKS[3],
+      track: TRACKS[1],
       owner: 1,
       approved: [],
       pending: [3],
@@ -197,10 +197,10 @@ async function main() {
 
   // 预置部分评分（演示评审进度与排行榜数据，phase 切到 evaluating/ended 即可见）
   const scoreSets = [
-    { innovation: 92, technical: 88, business: 85, completeness: 90 },
-    { innovation: 85, technical: 90, business: 80, completeness: 86 },
-    { innovation: 95, technical: 92, business: 90, completeness: 93 },
-    { innovation: 80, technical: 85, business: 78, completeness: 82 },
+    { business_value: 92, solution_quality: 88, implementation_result: 85, promotion_potential: 90 },
+    { business_value: 85, solution_quality: 90, implementation_result: 80, promotion_potential: 86 },
+    { business_value: 95, solution_quality: 92, implementation_result: 90, promotion_potential: 93 },
+    { business_value: 80, solution_quality: 85, implementation_result: 78, promotion_potential: 82 },
   ];
   // judge1 评前 3 个作品，judge2 评前 2 个作品
   for (let i = 0; i < submissionsForScore.length; i++) {

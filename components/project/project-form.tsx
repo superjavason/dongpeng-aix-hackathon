@@ -86,7 +86,7 @@ export function ProjectForm() {
             name="maxMembers"
             type="number"
             min={1}
-            max={10}
+            max={5}
             defaultValue={4}
             required
           />

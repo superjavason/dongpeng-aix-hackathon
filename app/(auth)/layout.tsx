@@ -20,7 +20,7 @@ export default function AuthLayout({
             height={44}
             className="h-11 w-11 shrink-0 object-contain"
           />
-          <span className="text-lg font-bold">东鹏 AI+X 黑客松</span>
+          <span className="text-lg font-bold">AI+X黑客松大赛</span>
         </Link>
         <div className="relative z-10 max-w-md">
           <h2 className="text-4xl font-bold leading-tight">
@@ -33,7 +33,7 @@ export default function AuthLayout({
           </p>
         </div>
         <p className="relative z-10 text-xs text-white/40">
-          © 2026 东鹏 AI+X 黑客松组委会
+          © 2026 东鹏 AI+X黑客松大赛组委会
         </p>
       </div>
 

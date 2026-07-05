@@ -3,9 +3,9 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
-  title: "东鹏 AI+X 黑客松",
+  title: "AI+X黑客松大赛",
   description:
-    "东鹏 AI+X 黑客松官方平台 — 提报项目、自由组队、提交作品、专业评审。科技·艺术·生活。",
+    "东鹏集团 AI+X黑客松大赛官方平台 — 让 AI 走进业务场景，让创新真正落地。",
   icons: { icon: "/logo2.png" },
 };
 

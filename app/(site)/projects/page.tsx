@@ -1,22 +1,22 @@
 import Link from "next/link";
-import { Plus, Search } from "lucide-react";
+import { Plus } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { getActiveEvent } from "@/lib/event";
 import { getSessionUser } from "@/lib/session";
-import { TRACKS, PHASE_LABELS } from "@/lib/constants";
+import { PHASE_LABELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ProjectCard, type ProjectCardData } from "@/components/project/project-card";
+import { ProjectFilters } from "@/components/project/project-filters";
 
 export const dynamic = "force-dynamic";
 
 export default async function ProjectsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ track?: string; q?: string }>;
+  searchParams: Promise<{ track?: string; q?: string; status?: string }>;
 }) {
-  const { track, q } = await searchParams;
+  const { track, q, status } = await searchParams;
   const event = await getActiveEvent();
   const user = await getSessionUser();
 
@@ -42,7 +42,15 @@ export default async function ProjectsPage({
       })
     : [];
 
-  const cards: ProjectCardData[] = projects.map((p) => ({
+  const filteredProjects = projects.filter((p) => {
+    const approvedCount = p.memberships.length;
+    const full = approvedCount >= p.maxMembers;
+    if (status === "recruiting") return !full;
+    if (status === "full") return full;
+    return true;
+  });
+
+  const cards: ProjectCardData[] = filteredProjects.map((p) => ({
     id: p.id,
     title: p.title,
     tagline: p.tagline,
@@ -80,23 +88,7 @@ export default async function ProjectsPage({
       </div>
 
       {/* 筛选 */}
-      <form className="mt-6 flex flex-wrap items-center gap-2" action="/projects">
-        <div className="relative flex-1 min-w-[220px]">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            name="q"
-            defaultValue={q}
-            placeholder="搜索项目名称或简介…"
-            className="pl-9"
-          />
-        </div>
-        <div className="flex flex-wrap gap-1.5">
-          <TrackChip current={track} value="all" label="全部" />
-          {TRACKS.map((t) => (
-            <TrackChip key={t} current={track} value={t} label={t} q={q} />
-          ))}
-        </div>
-      </form>
+      <ProjectFilters q={q} track={track} status={status} />
 
       {/* 列表 */}
       {cards.length === 0 ? (
@@ -111,35 +103,5 @@ export default async function ProjectsPage({
         </div>
       )}
     </main>
-  );
-}
-
-function TrackChip({
-  current,
-  value,
-  label,
-  q,
-}: {
-  current?: string;
-  value: string;
-  label: string;
-  q?: string;
-}) {
-  const active = (current ?? "all") === value;
-  const params = new URLSearchParams();
-  if (value !== "all") params.set("track", value);
-  if (q) params.set("q", q);
-  const href = `/projects${params.toString() ? `?${params}` : ""}`;
-  return (
-    <Link
-      href={href}
-      className={
-        active
-          ? "rounded-full bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground"
-          : "rounded-full border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary hover:text-primary"
-      }
-    >
-      {label}
-    </Link>
   );
 }
