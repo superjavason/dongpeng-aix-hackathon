@@ -3,7 +3,7 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const callbackUrl = params.get("callbackUrl") || "/dashboard";
+  const callbackUrl = params.get("callbackUrl");
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -30,7 +30,12 @@ function LoginForm() {
       return;
     }
     toast.success("登录成功");
-    router.push(callbackUrl);
+    const session = await getSession();
+    const role = session?.user?.role;
+    const defaultUrl =
+      role === "admin" ? "/admin" : role === "judge" ? "/judge" : "/dashboard";
+    const targetUrl = callbackUrl?.startsWith("/") ? callbackUrl : defaultUrl;
+    router.push(targetUrl);
     router.refresh();
   }
 

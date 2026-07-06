@@ -6,7 +6,11 @@ export const metadata: Metadata = {
   title: "AI+X黑客松大赛",
   description:
     "东鹏集团 AI+X黑客松大赛官方平台 — 让 AI 走进业务场景，让创新真正落地。",
-  icons: { icon: "/logo2.png" },
+  icons: {
+    icon: "/favicon-logo.png?v=20260706b",
+    shortcut: "/favicon-logo.png?v=20260706b",
+    apple: "/favicon-logo.png?v=20260706b",
+  },
 };
 
 export default function RootLayout({

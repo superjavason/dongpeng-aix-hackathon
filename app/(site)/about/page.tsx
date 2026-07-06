@@ -16,7 +16,8 @@ import {
   Users,
   Vote,
 } from "lucide-react";
-import { TRACKS, TRACK_DETAILS } from "@/lib/constants";
+import { PHASE_FLOW_MAP, TRACKS, TRACK_DETAILS } from "@/lib/constants";
+import { getActiveEvent } from "@/lib/event";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RegistrationCountdown } from "@/components/layout/registration-countdown";
@@ -74,7 +75,10 @@ const awards = [
 
 const trackIcons = [Briefcase, Bot, Code2, ImageIcon];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const event = await getActiveEvent();
+  const phase = event?.phase ?? "draft";
+
   return (
     <>
       <section className="relative overflow-hidden bg-brand-ink text-white">
@@ -154,10 +158,23 @@ export default function AboutPage() {
         <div className="container relative">
           <SectionTitle eyebrow="TIMELINE" title="活动安排" desc="从启动报名到决赛展示，关键节点一目了然。" />
           <div className="mt-12 space-y-4">
-            {schedule.map(([date, title, text], index) => (
-              <div key={title} className="tech-card relative grid gap-4 rounded-xl border border-neutral-200 bg-white/95 p-5 md:grid-cols-[160px_1fr]">
+            {schedule.map(([date, title, text], index) => {
+              const active = PHASE_FLOW_MAP[phase].flowItems.includes(title);
+              return (
+              <div
+                key={title}
+                className={`tech-card relative grid gap-4 rounded-xl border p-5 md:grid-cols-[160px_1fr] ${
+                  active
+                    ? "border-brand/60 bg-white shadow-lg shadow-brand/10"
+                    : "border-neutral-200 bg-white/95"
+                }`}
+              >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-50 text-brand">
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-lg ${
+                      active ? "bg-brand text-white" : "bg-brand-50 text-brand"
+                    }`}
+                  >
                     <CalendarDays className="h-5 w-5" />
                   </div>
                   <span className="text-xs font-semibold tracking-[0.18em] text-muted-foreground">
@@ -168,9 +185,13 @@ export default function AboutPage() {
                   <p className="text-sm font-semibold text-brand">{date}</p>
                   <h3 className="mt-1 text-lg font-semibold">{title}</h3>
                   <p className="mt-1 text-sm text-muted-foreground">{text}</p>
+                  {active && (
+                    <Badge className="mt-3">{PHASE_FLOW_MAP[phase].label}</Badge>
+                  )}
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
         </div>
       </section>

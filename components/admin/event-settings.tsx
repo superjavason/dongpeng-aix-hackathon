@@ -6,7 +6,7 @@ import { Plus, Trash2, Check } from "lucide-react";
 import { toast } from "sonner";
 import type { EventPhase } from "@prisma/client";
 import type { Criterion } from "@/lib/constants";
-import { PHASE_LABELS, PHASE_ORDER } from "@/lib/constants";
+import { PHASE_FLOW_MAP, PHASE_LABELS, PHASE_ORDER } from "@/lib/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -109,8 +109,34 @@ export function EventSettings({
             ))}
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            阶段决定全站行为：报名组队中开放报名/审核；比赛进行中开放作品提交；评分中开放评委打分；已结束可发布结果。
+            阶段决定全站行为，并与首页「赛事流程」联动：筹备中对应全员启动会；报名组队中对应报名收集与确认、AI技术辅导；评分中对应初赛评审、观众人气投票；结果展示对应决赛暨成果展示、成果沉淀与推广。
           </p>
+          <div className="mt-4 grid gap-3">
+            {PHASE_ORDER.map((p) => {
+              const mapping = PHASE_FLOW_MAP[p];
+              return (
+                <div
+                  key={p}
+                  className={cn(
+                    "rounded-xl border p-3 text-sm",
+                    p === phase
+                      ? "border-brand bg-brand-50"
+                      : "bg-white text-muted-foreground"
+                  )}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <span className="font-semibold text-foreground">
+                      {PHASE_LABELS[p]}
+                    </span>
+                    <span className="text-xs">
+                      {mapping.flowItems.join(" / ")}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-xs leading-5">{mapping.behavior}</p>
+                </div>
+              );
+            })}
+          </div>
         </CardContent>
       </Card>
 
@@ -129,41 +155,50 @@ export function EventSettings({
             <span>满分</span>
             <span />
           </div>
+          <p className="rounded-lg bg-neutral-50 px-3 py-2 text-xs leading-5 text-muted-foreground">
+            当前对应「关于赛事」中的专家评审 100 分制；专家评审最终占总成绩 80%，观众人气占 20%，观众人气不进入评委打分表。
+          </p>
           {criteria.map((c, i) => (
-            <div
-              key={c.key}
-              className="grid grid-cols-[1fr_100px_100px_40px] items-center gap-2"
-            >
+            <div key={c.key} className="space-y-2 rounded-xl border p-3">
+              <div className="grid grid-cols-[1fr_100px_100px_40px] items-center gap-2">
+                <Input
+                  value={c.label}
+                  onChange={(e) => updateCriterion(i, { label: e.target.value })}
+                />
+                <Input
+                  type="number"
+                  min={1}
+                  value={c.weight}
+                  onChange={(e) =>
+                    updateCriterion(i, { weight: Number(e.target.value) })
+                  }
+                />
+                <Input
+                  type="number"
+                  min={1}
+                  value={c.max}
+                  onChange={(e) =>
+                    updateCriterion(i, { max: Number(e.target.value) })
+                  }
+                />
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="text-destructive"
+                  onClick={() =>
+                    setCriteria((cs) => cs.filter((_, idx) => idx !== i))
+                  }
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
               <Input
-                value={c.label}
-                onChange={(e) => updateCriterion(i, { label: e.target.value })}
-              />
-              <Input
-                type="number"
-                min={1}
-                value={c.weight}
+                value={c.description ?? ""}
+                placeholder="评分细则说明，例如：问题真实性 10 分、效率提升度 15 分、战略契合度 5 分"
                 onChange={(e) =>
-                  updateCriterion(i, { weight: Number(e.target.value) })
+                  updateCriterion(i, { description: e.target.value })
                 }
               />
-              <Input
-                type="number"
-                min={1}
-                value={c.max}
-                onChange={(e) =>
-                  updateCriterion(i, { max: Number(e.target.value) })
-                }
-              />
-              <Button
-                size="icon"
-                variant="ghost"
-                className="text-destructive"
-                onClick={() =>
-                  setCriteria((cs) => cs.filter((_, idx) => idx !== i))
-                }
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
             </div>
           ))}
           <Button onClick={saveCriteria} disabled={saving}>
@@ -182,7 +217,7 @@ export function EventSettings({
             发布后，参赛者与公众可在排行榜查看各作品均分与名次。
             {phase !== "ended" && (
               <span className="block text-amber-600">
-                建议在「已结束」阶段发布。
+                建议在「结果展示」阶段发布。
               </span>
             )}
           </p>

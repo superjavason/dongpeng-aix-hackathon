@@ -59,7 +59,7 @@ export default async function AdminProjectsPage() {
               return (
                 <TableRow key={p.id}>
                   <TableCell className="font-medium">
-                    <Link href={`/projects/${p.id}`} className="hover:underline">
+                    <Link href={`/admin/projects/${p.id}`} className="hover:underline">
                       {p.title}
                     </Link>
                   </TableCell>

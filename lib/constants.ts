@@ -5,13 +5,38 @@ export type Criterion = {
   label: string;
   weight: number; // 相对权重
   max: number; // 该维度满分
+  description?: string; // 评分细则说明
 };
 
 export const DEFAULT_CRITERIA: Criterion[] = [
-  { key: "business_value", label: "业务价值", weight: 30, max: 100 },
-  { key: "solution_quality", label: "方案质量", weight: 25, max: 100 },
-  { key: "implementation_result", label: "落地成效", weight: 30, max: 100 },
-  { key: "promotion_potential", label: "推广潜力", weight: 15, max: 100 },
+  {
+    key: "business_value",
+    label: "业务价值",
+    weight: 30,
+    max: 30,
+    description: "问题真实性 10 分、效率提升度 15 分、战略契合度 5 分。",
+  },
+  {
+    key: "solution_quality",
+    label: "方案质量",
+    weight: 25,
+    max: 25,
+    description: "创新性 10 分、技术合理性 10 分、安全合规性 5 分。",
+  },
+  {
+    key: "implementation_result",
+    label: "落地成效",
+    weight: 30,
+    max: 30,
+    description: "完成度 10 分、实际使用情况 15 分、稳定可用性 5 分。",
+  },
+  {
+    key: "promotion_potential",
+    label: "推广潜力",
+    weight: 15,
+    max: 15,
+    description: "可复制性 8 分、投入产出比 4 分、呈现与文档 3 分。",
+  },
 ];
 
 export const TRACKS = [
@@ -54,9 +79,40 @@ export const TRACK_DETAILS: Record<
 export const PHASE_LABELS: Record<EventPhase, string> = {
   draft: "筹备中",
   registration: "报名组队中",
-  in_progress: "比赛进行中",
+  in_progress: "作品提交中",
   judging: "评分中",
-  ended: "已结束",
+  ended: "结果展示",
+};
+
+export const PHASE_FLOW_MAP: Record<
+  EventPhase,
+  { label: string; flowItems: string[]; behavior: string }
+> = {
+  draft: {
+    label: "筹备中",
+    flowItems: ["全员启动会"],
+    behavior: "活动预热与规则宣贯，不开放提报、作品提交或评分。",
+  },
+  registration: {
+    label: "报名组队中",
+    flowItems: ["报名收集与确认", "AI技术辅导"],
+    behavior: "开放项目提报、报名加入、队长审核，并推进赛道辅导。",
+  },
+  in_progress: {
+    label: "作品提交中",
+    flowItems: ["AI技术辅导"],
+    behavior: "项目继续打磨，已组队成员可提交或更新作品。",
+  },
+  judging: {
+    label: "评分中",
+    flowItems: ["初赛评审", "观众人气投票"],
+    behavior: "锁定作品提交，开放评委评分，并对应观众人气投票阶段。",
+  },
+  ended: {
+    label: "结果展示",
+    flowItems: ["决赛暨成果展示", "成果沉淀与推广"],
+    behavior: "展示最终结果、决赛成果与后续沉淀推广内容。",
+  },
 };
 
 export const PHASE_ORDER: EventPhase[] = [

@@ -3,7 +3,8 @@ import { randomUUID } from "node:crypto";
 import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 
-export const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const MAX_ATTACHMENT_FILE_SIZE = 500 * 1024 * 1024; // 500MB
 
 export const ALLOWED_IMAGE_TYPES = [
   "image/png",

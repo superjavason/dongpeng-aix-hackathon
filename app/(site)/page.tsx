@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { prisma } from "@/lib/db";
 import { getActiveEvent } from "@/lib/event";
-import { PHASE_LABELS, TRACKS, TRACK_DETAILS } from "@/lib/constants";
+import { PHASE_FLOW_MAP, PHASE_LABELS, TRACKS, TRACK_DETAILS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RegistrationCountdown } from "@/components/layout/registration-countdown";
@@ -147,7 +147,7 @@ export default async function Home() {
           </div>
           <div className="relative mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {HOME_SCHEDULE.map(([date, title, desc], i) => {
-            const active = i === 0;
+            const active = PHASE_FLOW_MAP[phase].flowItems.includes(title);
             return (
               <div
                 key={title}
@@ -173,7 +173,9 @@ export default async function Home() {
                   {desc}
                 </p>
                 {active && (
-                  <Badge className="absolute right-3 top-3">启动会</Badge>
+                  <Badge className="absolute right-3 top-3">
+                    {PHASE_LABELS[phase]}
+                  </Badge>
                 )}
               </div>
             );

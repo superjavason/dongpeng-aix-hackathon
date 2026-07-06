@@ -8,15 +8,21 @@ type Remaining = {
   minutes: number;
   seconds: number;
   ended: boolean;
+  hidden: boolean;
 };
 
 const TARGET_TIME = new Date("2026-07-18T10:00:00+08:00").getTime();
+const KICKOFF_DAY_END_TIME = new Date("2026-07-19T00:00:00+08:00").getTime();
 
 function getRemaining(): Remaining {
+  if (Date.now() >= KICKOFF_DAY_END_TIME) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, ended: true, hidden: true };
+  }
+
   const distance = TARGET_TIME - Date.now();
 
   if (distance <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0, ended: true };
+    return { days: 0, hours: 0, minutes: 0, seconds: 0, ended: true, hidden: false };
   }
 
   return {
@@ -25,6 +31,7 @@ function getRemaining(): Remaining {
     minutes: Math.floor((distance / (1000 * 60)) % 60),
     seconds: Math.floor((distance / 1000) % 60),
     ended: false,
+    hidden: false,
   };
 }
 
@@ -40,6 +47,8 @@ export function RegistrationCountdown() {
     const timer = window.setInterval(() => setRemaining(getRemaining()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  if (!remaining || remaining.hidden) return null;
 
   const items = [
     { label: "天", value: remaining ? String(remaining.days) : "--" },

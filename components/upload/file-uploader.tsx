@@ -82,7 +82,7 @@ export function FileUploader({
           ) : (
             <FileUp className="h-4 w-4" />
           )}
-          上传附件（PDF / PPT，≤10MB）
+          上传附件（PDF / PPT，≤500MB）
         </button>
       )}
 
