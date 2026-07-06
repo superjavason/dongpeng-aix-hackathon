@@ -51,7 +51,7 @@ export default function RegisterPage() {
     <div>
       <h1 className="text-2xl font-bold">创建账号</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        加入东鹏 AI+X 黑客松，开启你的创意之旅
+        加入 AI+X黑客松大赛，开启你的创意之旅
       </p>
 
       <form onSubmit={onSubmit} className="mt-8 space-y-4">

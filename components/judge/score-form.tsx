@@ -75,6 +75,11 @@ export function ScoreForm({
               {scores[c.key]}
             </span>
           </div>
+          {c.description && (
+            <p className="text-xs leading-5 text-muted-foreground">
+              {c.description}
+            </p>
+          )}
           <input
             type="range"
             min={0}

@@ -15,20 +15,22 @@ export async function ConsoleHeader({
 }) {
   const user = await getSessionUser();
   return (
-    <header className="border-b bg-white">
+    <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2">
             <Image
-              src="/logo2.png"
+              src="/nav-dongpeng-logo-transparent.png"
               alt="东鹏"
-              width={32}
-              height={32}
-              className="h-8 w-8 shrink-0 object-contain"
+              width={113}
+              height={28}
+              unoptimized
+              className="h-7 w-auto shrink-0 object-contain"
             />
+            <span className="block text-lg font-bold tracking-tight text-foreground">
+              {title}
+            </span>
           </Link>
-          <div className="h-6 w-px bg-border" />
-          <span className="font-semibold">{title}</span>
           <Badge variant="secondary">{accent}</Badge>
         </div>
         <div className="flex items-center gap-3">

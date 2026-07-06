@@ -10,28 +10,27 @@ export async function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b bg-white/80 backdrop-blur-md">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5">
+        <Link href="/" className="flex items-center gap-2">
           <Image
-            src="/logo2.png"
+            src="/nav-dongpeng-logo-transparent.png"
             alt="东鹏"
-            width={36}
-            height={36}
-            className="h-9 w-9 shrink-0 object-contain"
+            width={113}
+            height={28}
+            unoptimized
+            className="h-7 w-auto shrink-0 object-contain"
           />
-          <div className="leading-tight">
-            <span className="block text-base font-bold tracking-tight">
-              东鹏 AI+X 黑客松
-            </span>
-            <span className="block text-[10px] text-muted-foreground">
-              科技 · 艺术 · 生活
+          <div className="leading-none">
+            <span className="block text-lg font-bold tracking-tight text-foreground">
+              AI+X黑客松大赛
             </span>
           </div>
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
+          <NavLink href="/">首页</NavLink>
           <NavLink href="/projects">项目广场</NavLink>
           <NavLink href="/leaderboard">排行榜</NavLink>
-          <NavLink href="/#about">关于赛事</NavLink>
+          <NavLink href="/about">关于赛事</NavLink>
         </nav>
 
         <div className="flex items-center gap-3">

@@ -12,7 +12,7 @@ export default async function AdminLayout({
   await requireRole("admin");
   return (
     <div className="min-h-screen bg-neutral-50">
-      <ConsoleHeader title="东鹏 AI+X 黑客松" accent="管理员后台" />
+      <ConsoleHeader title="AI+X黑客松大赛" accent="管理员后台" />
       <AdminNav />
       {children}
     </div>

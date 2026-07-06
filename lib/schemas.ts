@@ -27,9 +27,9 @@ export const loginSchema = z.object({
 export const projectSchema = z.object({
   title: z.string().min(2, "项目名称至少 2 个字").max(60),
   tagline: z.string().min(4, "一句话简介至少 4 个字").max(80),
-  description: z.string().min(10, "项目描述至少 10 个字").max(2000),
+  description: z.string().min(10, "项目描述至少 10 个字").max(4000),
   track: z.enum(TRACKS as unknown as [string, ...string[]]),
-  maxMembers: z.coerce.number().int().min(1).max(10),
+  maxMembers: z.coerce.number().int().min(1).max(5),
   coverImageUrl: storedUrl.optional().or(z.literal("")),
 });
 export type ProjectInput = z.infer<typeof projectSchema>;
@@ -68,6 +68,7 @@ export const criterionSchema = z.object({
   label: z.string().min(1),
   weight: z.coerce.number().min(1),
   max: z.coerce.number().min(1),
+  description: z.string().max(300).optional(),
 });
 
 export const eventUpdateSchema = z.object({

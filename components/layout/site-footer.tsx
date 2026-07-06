@@ -13,7 +13,7 @@ export function SiteFooter() {
             className="h-7 w-auto shrink-0 object-contain"
           />
         </div>
-        <p>© 2026 东鹏 AI+X 黑客松组委会 · 科技 · 艺术 · 生活</p>
+        <p>© 2026 东鹏 AI+X黑客松大赛组委会</p>
       </div>
     </footer>
   );
