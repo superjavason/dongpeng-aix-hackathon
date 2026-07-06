@@ -111,14 +111,6 @@ export default async function Home() {
             <div className="tech-logo-field relative flex h-80 w-80 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10">
               <div className="absolute inset-7 rounded-full bg-black/10 ring-1 ring-white/10" />
               <div className="relative z-10 flex flex-col items-center text-center">
-                <Image
-                  src="/logo2.png"
-                  alt="东鹏"
-                  width={120}
-                  height={120}
-                  priority
-                  className="h-auto w-auto object-contain drop-shadow-2xl"
-                />
                 <div className="mt-5 text-5xl font-black leading-none tracking-tight text-white">
                   AI+X
                 </div>
