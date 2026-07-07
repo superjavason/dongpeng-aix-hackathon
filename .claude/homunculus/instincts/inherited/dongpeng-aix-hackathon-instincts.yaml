@@ -1,0 +1,542 @@
+# Instincts generated from https://github.com/superjavason/dongpeng-aix-hackathon
+# Generated: 2026-07-07T06:52:08.860Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: dongpeng-aix-hackathon-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: feat, docs, fix
+
+## Evidence
+
+- 12 commits analyzed
+- Detected conventional commit pattern
+- Examples: docs: multi-event admin management design spec, feat: add resolveAdminEvent fallback logic
+
+---
+id: dongpeng-aix-hackathon-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Commit Length
+
+## Action
+
+Write moderate-length commit messages (~53 characters)
+
+## Evidence
+
+- Average commit message length: 53 chars
+- Based on 12 commits
+
+---
+id: dongpeng-aix-hackathon-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Naming Files
+
+## Action
+
+Use camelCase naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: camelCase
+
+---
+id: dongpeng-aix-hackathon-import-alias
+trigger: "when importing modules"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Import Alias
+
+## Action
+
+Use path aliases (@/, ~/) instead of relative imports
+
+## Evidence
+
+- Import analysis shows alias pattern
+- Example: import { x } from '@/lib/x'
+
+---
+id: dongpeng-aix-hackathon-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: dongpeng-aix-hackathon-workflow-feature-development
+trigger: "when implementing a new feature"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Workflow Feature Development
+
+## Action
+
+Follow the feature-development workflow:
+1. Add feature implementation
+2. Add tests for feature
+3. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~20x per month
+- Files: lib/*, app/api/admin/event/[id]/*, app/api/admin/event/*
+
+---
+id: dongpeng-aix-hackathon-workflow-feature-development-with-schema-and-tests
+trigger: "when doing feature development with schema and tests"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Workflow Feature Development With Schema And Tests
+
+## Action
+
+Follow the feature-development-with-schema-and-tests workflow:
+1. Update or add schema definitions in lib/schemas.ts
+2. Update or add corresponding tests in lib/schemas.test.ts
+3. Update or add implementation logic in lib/event.ts or similar core files
+4. Update or add corresponding tests in lib/event.test.ts
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: lib/schemas.ts, lib/schemas.test.ts, lib/event.ts
+
+---
+id: dongpeng-aix-hackathon-workflow-api-endpoint-addition-or-update
+trigger: "when doing api endpoint addition or update"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Workflow Api Endpoint Addition Or Update
+
+## Action
+
+Follow the api-endpoint-addition-or-update workflow:
+1. Create or update API route file in app/api/admin/event/ or similar directory
+2. Update or add related server action in lib/actions/
+3. Update or add related validation or schema logic
+4. Update or add related UI components if necessary
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: app/api/admin/event/route.ts, app/api/admin/event/[id]/route.ts, lib/actions/admin-event.ts
+
+---
+id: dongpeng-aix-hackathon-workflow-admin-ui-page-or-component-addition
+trigger: "when doing admin ui page or component addition"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Workflow Admin Ui Page Or Component Addition
+
+## Action
+
+Follow the admin-ui-page-or-component-addition workflow:
+1. Create or update page files in app/admin/ (e.g., events/page.tsx, event/page.tsx)
+2. Create or update supporting components in components/admin/
+3. Update layout or navigation components as needed
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: app/admin/events/page.tsx, app/admin/event/page.tsx, components/admin/event-create-dialog.tsx
+
+---
+id: dongpeng-aix-hackathon-workflow-design-spec-and-implementation-plan-documentation
+trigger: "when doing design spec and implementation plan documentation"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Workflow Design Spec And Implementation Plan Documentation
+
+## Action
+
+Follow the design-spec-and-implementation-plan-documentation workflow:
+1. Add a design spec markdown file in docs/superpowers/specs/
+2. Add an implementation plan markdown file in docs/superpowers/plans/
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: docs/superpowers/specs/*.md, docs/superpowers/plans/*.md
+
+---
+id: dongpeng-aix-hackathon-instinct-filename-camelcase
+trigger: "When creating or renaming a file"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Filename Camelcase
+
+## Action
+
+Use camelCase for file names
+
+## Evidence
+
+- Pattern in namingConventions.files
+- Files in lib/, components/
+
+---
+id: dongpeng-aix-hackathon-instinct-function-camelcase
+trigger: "When defining a function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Function Camelcase
+
+## Action
+
+Use camelCase for function names
+
+## Evidence
+
+- Pattern in namingConventions.functions
+- lib/event.ts
+
+---
+id: dongpeng-aix-hackathon-instinct-class-pascalcase
+trigger: "When defining a class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Class Pascalcase
+
+## Action
+
+Use PascalCase for class names
+
+## Evidence
+
+- Pattern in namingConventions.classes
+
+---
+id: dongpeng-aix-hackathon-instinct-constant-screaming-snake-case
+trigger: "When defining a constant"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Constant Screaming Snake Case
+
+## Action
+
+Use SCREAMING_SNAKE_CASE for constant names
+
+## Evidence
+
+- Pattern in namingConventions.constants
+
+---
+id: dongpeng-aix-hackathon-instinct-import-alias
+trigger: "When importing modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Import Alias
+
+## Action
+
+Use alias import style
+
+## Evidence
+
+- Pattern in importStyle
+
+---
+id: dongpeng-aix-hackathon-instinct-export-named
+trigger: "When exporting modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Export Named
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- Pattern in exportStyle
+
+---
+id: dongpeng-aix-hackathon-instinct-try-catch-error-handling
+trigger: "When handling errors in code"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Try Catch Error Handling
+
+## Action
+
+Use try-catch blocks for error handling
+
+## Evidence
+
+- Pattern in errorHandling.style
+
+---
+id: dongpeng-aix-hackathon-instinct-test-file-naming
+trigger: "When creating a test file"
+confidence: 0.9
+domain: testing
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Test File Naming
+
+## Action
+
+Name test files with .test. in the filename (e.g., event.test.ts)
+
+## Evidence
+
+- Files like lib/event.test.ts, lib/schemas.test.ts
+
+---
+id: dongpeng-aix-hackathon-instinct-test-location-mixed
+trigger: "When adding tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Test Location Mixed
+
+## Action
+
+Place test files alongside implementation files (mixed location)
+
+## Evidence
+
+- testLocation: mixed
+- lib/event.test.ts next to lib/event.ts
+
+---
+id: dongpeng-aix-hackathon-instinct-test-schema-validation
+trigger: "When adding or updating schema definitions"
+confidence: 0.9
+domain: testing
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Test Schema Validation
+
+## Action
+
+Add or update corresponding tests for schema logic
+
+## Evidence
+
+- feature-development-with-schema-and-tests workflow
+- lib/schemas.ts and lib/schemas.test.ts
+
+---
+id: dongpeng-aix-hackathon-instinct-commit-conventional-format
+trigger: "When writing a commit message"
+confidence: 0.95
+domain: git
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Commit Conventional Format
+
+## Action
+
+Use conventional commit format: <type>: <description> (e.g., feat: add X)
+
+## Evidence
+
+- commits.type: conventional
+- Examples: 'feat: ...', 'docs: ...', 'fix: ...'
+
+---
+id: dongpeng-aix-hackathon-instinct-commit-prefixes
+trigger: "When selecting a commit type"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Commit Prefixes
+
+## Action
+
+Use one of the prefixes: feat, docs, fix
+
+## Evidence
+
+- commits.prefixes
+- Examples in commit history
+
+---
+id: dongpeng-aix-hackathon-instinct-feature-dev-schema-tests
+trigger: "When adding or modifying a core feature that requires schema validation and testing"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Feature Dev Schema Tests
+
+## Action
+
+Update/add schema in lib/schemas.ts, add/update tests in lib/schemas.test.ts, update implementation in lib/event.ts, and add/update tests in lib/event.test.ts
+
+## Evidence
+
+- feature-development-with-schema-and-tests workflow
+- Commits and files in workflow example
+
+---
+id: dongpeng-aix-hackathon-instinct-api-endpoint-addition
+trigger: "When exposing new backend functionality via an API route"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Api Endpoint Addition
+
+## Action
+
+Create/update API route in app/api/admin/event/, update/add related server action in lib/actions/, update/add related schema logic, and update/add UI components if needed
+
+## Evidence
+
+- api-endpoint-addition-or-update workflow
+- Commits and files in workflow example
+
+---
+id: dongpeng-aix-hackathon-instinct-admin-ui-addition
+trigger: "When providing new admin functionality or views"
+confidence: 0.88
+domain: workflow
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Admin Ui Addition
+
+## Action
+
+Create/update page files in app/admin/, supporting components in components/admin/, and update layout/navigation components as needed
+
+## Evidence
+
+- admin-ui-page-or-component-addition workflow
+- Commits and files in workflow example
+
+---
+id: dongpeng-aix-hackathon-instinct-design-doc
+trigger: "When formally proposing and planning a new feature or architectural change"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: superjavason/dongpeng-aix-hackathon
+---
+
+# Dongpeng Aix Hackathon Instinct Design Doc
+
+## Action
+
+Add a design spec markdown file in docs/superpowers/specs/ and an implementation plan markdown file in docs/superpowers/plans/
+
+## Evidence
+
+- design-spec-and-implementation-plan-documentation workflow
+- docs/superpowers/specs/*.md, docs/superpowers/plans/*.md
+
