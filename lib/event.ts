@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/db";
 import { DEFAULT_CRITERIA, type Criterion } from "@/lib/constants";
 import type { Event } from "@prisma/client";
+import { cookies } from "next/headers";
+
+export const ADMIN_EVENT_COOKIE = "admin_event_id";
 
 export type EventLike = { id: string; isActive: boolean };
 
@@ -35,4 +38,22 @@ export function getCriteria(event: Pick<Event, "scoreCriteria"> | null): Criteri
     return raw as unknown as Criterion[];
   }
   return DEFAULT_CRITERIA;
+}
+
+/** 全部赛事（含项目数），按创建时间倒序。供后台列表与切换器使用。 */
+export async function listEvents() {
+  return prisma.event.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { _count: { select: { projects: true } } },
+  });
+}
+
+/** 后台"当前管理赛事"：读 cookie 并回落。公众端请勿使用，请用 getActiveEvent。 */
+export async function getAdminEvent() {
+  const cookieStore = await cookies();
+  const cookieId = cookieStore.get(ADMIN_EVENT_COOKIE)?.value ?? null;
+  const events = await prisma.event.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  return resolveAdminEvent(cookieId, events);
 }
