@@ -35,8 +35,9 @@ enum TeamRole {
 model User {
   id           String   @id @default(cuid())
   name         String
-  email        String   @unique
-  passwordHash String
+  email        String?  @unique
+  passwordHash String?
+  ssoId        String?  @unique
   role         Role     @default(participant)
   avatarUrl    String?
   bio          String?

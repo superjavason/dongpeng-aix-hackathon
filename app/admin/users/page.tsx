@@ -50,7 +50,7 @@ export default async function AdminUsersPage() {
             {users.map((u) => (
               <TableRow key={u.id}>
                 <TableCell className="font-medium">{u.name}</TableCell>
-                <TableCell className="text-muted-foreground">{u.email}</TableCell>
+                <TableCell className="text-muted-foreground">{u.email ?? "—"}</TableCell>
                 <TableCell>
                   <Badge
                     variant={
