@@ -9,6 +9,7 @@ import {
   Trophy,
   Gavel,
   Settings,
+  CalendarDays,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,6 +19,7 @@ const ITEMS = [
   { href: "/admin/projects", label: "项目管理", icon: FolderKanban },
   { href: "/admin/submissions", label: "作品管理", icon: Trophy },
   { href: "/admin/judges", label: "评委管理", icon: Gavel },
+  { href: "/admin/events", label: "赛事管理", icon: CalendarDays },
   { href: "/admin/event", label: "赛事设置", icon: Settings },
 ];
 
