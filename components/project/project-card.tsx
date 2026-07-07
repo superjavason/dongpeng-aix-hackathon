@@ -8,6 +8,7 @@ import {
   Factory,
   FileText,
   Headphones,
+  Heart,
   ImageIcon,
   LayoutGrid,
   MessageCircle,
@@ -26,6 +27,7 @@ export type ProjectCardData = {
   maxMembers: number;
   ownerName: string;
   approvedCount: number;
+  likeCount: number;
 };
 
 export function ProjectCard({ project }: { project: ProjectCardData }) {
@@ -50,6 +52,12 @@ export function ProjectCard({ project }: { project: ProjectCardData }) {
         <Badge className="absolute left-3 top-3" variant="secondary">
           {project.track}
         </Badge>
+        {project.likeCount > 0 && (
+          <span className="absolute right-3 top-3 flex items-center gap-1 rounded-full bg-black/45 px-2 py-1 text-xs font-medium text-white backdrop-blur">
+            <Heart className="h-3 w-3 fill-current text-brand-red" />
+            {project.likeCount}
+          </span>
+        )}
       </div>
       <div className="flex flex-1 flex-col p-4">
         <h3 className="line-clamp-1 font-semibold">{project.title}</h3>

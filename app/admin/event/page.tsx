@@ -26,6 +26,7 @@ export default async function AdminEventPage() {
           phase={event.phase}
           criteria={getCriteria(event)}
           resultsPublished={event.resultsPublished}
+          maxLikesPerUser={event.maxLikesPerUser}
         />
       </div>
     </main>

@@ -37,6 +37,7 @@ export default async function ProjectsPage({
         include: {
           owner: { select: { name: true } },
           memberships: { where: { status: "approved" }, select: { id: true } },
+          _count: { select: { likes: true } },
         },
         orderBy: { createdAt: "desc" },
       })
@@ -59,6 +60,7 @@ export default async function ProjectsPage({
     maxMembers: p.maxMembers,
     ownerName: p.owner.name,
     approvedCount: p.memberships.length,
+    likeCount: p._count.likes,
   }));
 
   const canCreate =

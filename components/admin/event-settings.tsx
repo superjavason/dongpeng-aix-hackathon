@@ -18,16 +18,19 @@ export function EventSettings({
   phase: initialPhase,
   criteria: initialCriteria,
   resultsPublished: initialPublished,
+  maxLikesPerUser: initialMaxLikes,
 }: {
   eventId: string;
   phase: EventPhase;
   criteria: Criterion[];
   resultsPublished: boolean;
+  maxLikesPerUser: number;
 }) {
   const router = useRouter();
   const [phase, setPhase] = useState<EventPhase>(initialPhase);
   const [criteria, setCriteria] = useState<Criterion[]>(initialCriteria);
   const [published, setPublished] = useState(initialPublished);
+  const [maxLikes, setMaxLikes] = useState<number>(initialMaxLikes);
   const [saving, setSaving] = useState(false);
 
   async function patch(body: Record<string, unknown>, msg: string) {
@@ -204,6 +207,47 @@ export function EventSettings({
           <Button onClick={saveCriteria} disabled={saving}>
             <Check /> 保存维度
           </Button>
+        </CardContent>
+      </Card>
+
+      {/* 人气点赞 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>人气点赞</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-sm text-muted-foreground">
+            每位登录用户在本场赛事最多可为多少个项目点赞（每个项目 1 票）。
+          </p>
+          <div className="flex items-end gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="maxLikes">每用户点赞上限</Label>
+              <Input
+                id="maxLikes"
+                type="number"
+                min={1}
+                max={100}
+                className="w-32"
+                value={maxLikes}
+                onChange={(e) => setMaxLikes(Number(e.target.value))}
+              />
+            </div>
+            <Button
+              disabled={saving}
+              onClick={() => {
+                if (!Number.isInteger(maxLikes) || maxLikes < 1 || maxLikes > 100) {
+                  toast.error("点赞上限需为 1–100 的整数");
+                  return;
+                }
+                patch({ maxLikesPerUser: maxLikes }, "点赞上限已保存");
+              }}
+            >
+              <Check /> 保存上限
+            </Button>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            调低上限不会撤回用户已投出的票，仅影响后续点赞额度。
+          </p>
         </CardContent>
       </Card>
 

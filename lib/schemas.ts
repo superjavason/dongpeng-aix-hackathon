@@ -79,6 +79,7 @@ export const eventUpdateSchema = z.object({
     .optional(),
   scoreCriteria: z.array(criterionSchema).min(1).optional(),
   resultsPublished: z.boolean().optional(),
+  maxLikesPerUser: z.coerce.number().int().min(1).max(100).optional(),
   isActive: z.boolean().optional(),
   track: z.string().max(80).optional(),
   startAt: z.coerce.date().optional(),
