@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { getActiveEvent } from "@/lib/event";
+import { getAdminEvent } from "@/lib/event";
 import {
   Table,
   TableBody,
@@ -16,7 +16,7 @@ import { DeleteButton } from "@/components/admin/delete-button";
 export const dynamic = "force-dynamic";
 
 export default async function AdminProjectsPage() {
-  const event = await getActiveEvent();
+  const event = await getAdminEvent();
   const projects = event
     ? await prisma.project.findMany({
         where: { eventId: event.id },
