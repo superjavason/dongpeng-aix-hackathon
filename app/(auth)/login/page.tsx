@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getSession, signIn } from "next-auth/react";
@@ -14,6 +14,17 @@ function LoginForm() {
   const params = useSearchParams();
   const callbackUrl = params.get("callbackUrl");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    getSession().then((session) => {
+      const role = session?.user?.role;
+      if (!role) return;
+      const defaultUrl =
+        role === "admin" ? "/admin" : role === "judge" ? "/judge" : "/dashboard";
+      const targetUrl = callbackUrl?.startsWith("/") ? callbackUrl : defaultUrl;
+      router.replace(targetUrl);
+    });
+  }, [callbackUrl, router]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();

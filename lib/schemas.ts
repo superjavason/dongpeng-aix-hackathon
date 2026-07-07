@@ -79,6 +79,22 @@ export const eventUpdateSchema = z.object({
     .optional(),
   scoreCriteria: z.array(criterionSchema).min(1).optional(),
   resultsPublished: z.boolean().optional(),
+  isActive: z.boolean().optional(),
+  track: z.string().max(80).optional(),
+  startAt: z.coerce.date().optional(),
+  endAt: z.coerce.date().optional(),
+});
+
+export const eventCreateSchema = z.object({
+  name: z.string().min(2).max(80),
+  description: z.string().min(2),
+  track: z.string().max(80).optional(),
+  phase: z
+    .enum(["draft", "registration", "in_progress", "judging", "ended"])
+    .default("draft"),
+  startAt: z.coerce.date().optional(),
+  endAt: z.coerce.date().optional(),
+  scoreCriteria: z.array(criterionSchema).min(1).optional(),
 });
 
 export const userUpdateSchema = z.object({

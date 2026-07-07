@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { getActiveEvent } from "@/lib/event";
+import { getAdminEvent } from "@/lib/event";
 import { averageScore } from "@/lib/scoring";
 import {
   Table,
@@ -16,7 +16,7 @@ import { DeleteButton } from "@/components/admin/delete-button";
 export const dynamic = "force-dynamic";
 
 export default async function AdminSubmissionsPage() {
-  const event = await getActiveEvent();
+  const event = await getAdminEvent();
   const submissions = event
     ? await prisma.submission.findMany({
         where: { project: { eventId: event.id } },

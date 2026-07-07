@@ -20,6 +20,11 @@ export function UserMenu({
   name: string;
   role: Role;
 }) {
+  async function handleSignOut() {
+    await signOut({ redirect: false });
+    window.location.assign("/");
+  }
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -62,7 +67,7 @@ export function UserMenu({
         <Button
           variant="outline"
           className="w-full"
-          onClick={() => signOut({ callbackUrl: "/" })}
+          onClick={handleSignOut}
         >
           <LogOut className="mr-1" /> 退出登录
         </Button>
