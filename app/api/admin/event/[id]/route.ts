@@ -46,17 +46,15 @@ export async function PATCH(
       );
     }
 
-    // 单活跃不变式：设为活跃时，先取消其余所有赛事的 isActive。
-    if (data.isActive === true) {
-      await prisma.event.updateMany({
-        where: { id: { not: id }, isActive: true },
-        data: { isActive: false },
-      });
-    }
-
-    const event = await prisma.event.update({
-      where: { id },
-      data,
+    // 单活跃不变式：设为活跃时，先取消其余所有赛事的 isActive。原子化处理，避免中途失败导致零活跃赛事。
+    const event = await prisma.$transaction(async (tx) => {
+      if (data.isActive === true) {
+        await tx.event.updateMany({
+          where: { id: { not: id }, isActive: true },
+          data: { isActive: false },
+        });
+      }
+      return tx.event.update({ where: { id }, data });
     });
     return ok({ id: event.id, phase: event.phase });
   } catch (e) {

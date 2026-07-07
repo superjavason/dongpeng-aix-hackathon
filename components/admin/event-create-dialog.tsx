@@ -94,7 +94,10 @@ export function EventCreateDialog() {
           <Button variant="outline" onClick={() => setOpen(false)}>
             取消
           </Button>
-          <Button onClick={submit} disabled={loading || name.length < 2}>
+          <Button
+            onClick={submit}
+            disabled={loading || name.length < 2 || description.trim().length < 2}
+          >
             {loading ? "创建中…" : "创建"}
           </Button>
         </DialogFooter>
