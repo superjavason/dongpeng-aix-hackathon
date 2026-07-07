@@ -136,7 +136,7 @@ export default async function AdminProjectDetailPage({
           <Card className="rounded-3xl">
             <CardContent className="space-y-4 p-5">
               <InfoRow label="所属赛事" value={project.event.name} />
-              <InfoRow label="发起人" value={`${project.owner.name} · ${project.owner.email}`} />
+              <InfoRow label="发起人" value={`${project.owner.name}${project.owner.email ? ` · ${project.owner.email}` : ""}`} />
               <InfoRow label="队伍人数" value={`${approved.length}/${project.maxMembers}`} />
               <InfoRow label="待审核报名" value={`${pending.length}`} />
             </CardContent>
@@ -156,7 +156,7 @@ export default async function AdminProjectDetailPage({
                     </Avatar>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{m.user.name}</p>
-                      <p className="truncate text-xs text-muted-foreground">{m.user.email}</p>
+                      <p className="truncate text-xs text-muted-foreground">{m.user.email ?? "—"}</p>
                     </div>
                     {m.teamRole === "owner" ? (
                       <Badge variant="outline">

@@ -20,6 +20,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user || user.disabled) return null;
+        if (!user.passwordHash) return null; // SSO-only 用户无密码，禁止密码登录路径
 
         const valid = await bcrypt.compare(password, user.passwordHash);
         if (!valid) return null;
