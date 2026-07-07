@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 export default function AuthLayout({
   children,
@@ -14,13 +13,9 @@ export default function AuthLayout({
         <div className="absolute inset-0 tech-circuit-grid" />
         <div className="absolute inset-0 tech-scan-lines" />
         <Link href="/" className="relative z-10 flex items-center gap-3">
-          <Image
-            src="/logo2.png"
-            alt="东鹏"
-            width={44}
-            height={44}
-            className="h-11 w-11 shrink-0 object-contain"
-          />
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-sm font-black text-white">
+            AI
+          </span>
           <div className="leading-tight">
             <span className="block text-lg font-bold">AI+X黑客松大赛</span>
             <span className="block text-xs text-white/50">
@@ -31,14 +26,14 @@ export default function AuthLayout({
         <div className="relative z-10">
           <div className="tech-logo-field relative mb-12 flex h-48 w-48 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10">
             <div className="absolute inset-5 rounded-full bg-black/10 ring-1 ring-white/10" />
-            <Image
-              src="/logo2.png"
-              alt="东鹏"
-              width={92}
-              height={92}
-              priority
-              className="relative z-10 object-contain drop-shadow-2xl"
-            />
+            <div className="relative z-10 text-center">
+              <div className="text-4xl font-black leading-none tracking-tight text-white">
+                AI+X
+              </div>
+              <div className="mt-2 text-sm font-semibold tracking-[0.18em] text-brand">
+                HACKATHON
+              </div>
+            </div>
           </div>
           <div className="max-w-md">
             <h2 className="text-4xl font-bold leading-tight">

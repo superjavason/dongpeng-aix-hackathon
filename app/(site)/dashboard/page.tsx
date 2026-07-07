@@ -72,7 +72,8 @@ export default async function DashboardPage() {
     0
   );
   const submittedCount = ownedProjects.filter((p) => p.submission).length;
-  const canCreate = phase === "registration";
+  const canCreate =
+    sessionUser.role === "participant" && phase === "registration";
 
   return (
     <main className="bg-white">

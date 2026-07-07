@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   Factory,
@@ -55,15 +54,6 @@ export default async function Home() {
         <div className="absolute inset-0 tech-circuit-grid" />
         <div className="absolute inset-0 tech-scan-lines" />
         <div className="absolute inset-y-0 right-0 hidden w-1/2 tech-data-field lg:block" />
-        <div className="pointer-events-none absolute right-8 top-28 z-0 hidden opacity-20 md:block lg:hidden">
-          <Image
-            src="/logo2.png"
-            alt=""
-            width={170}
-            height={170}
-            className="h-auto w-auto object-contain drop-shadow-2xl"
-          />
-        </div>
         <div className="container relative z-10 grid max-w-6xl items-center gap-10 px-9 py-16 sm:px-10 md:py-20 lg:grid-cols-[minmax(0,1fr)_360px] lg:py-24">
           <div className="min-w-0 max-w-[35rem] animate-fade-up">
             <Badge className="bg-brand/90 hover:bg-brand">
@@ -111,13 +101,13 @@ export default async function Home() {
             <div className="tech-logo-field relative flex h-80 w-80 items-center justify-center rounded-full bg-white/5 ring-1 ring-white/10">
               <div className="absolute inset-7 rounded-full bg-black/10 ring-1 ring-white/10" />
               <div className="relative z-10 flex flex-col items-center text-center">
-                <div className="mt-5 text-5xl font-black leading-none tracking-tight text-white">
+                <div className="text-6xl font-black leading-none tracking-tight text-white">
                   AI+X
                 </div>
                 <div className="mt-2 text-xl font-bold text-brand">黑客松大赛</div>
                 <div className="mt-3 h-px w-24 bg-white/30" />
                 <div className="mt-3 text-xs font-medium tracking-[0.28em] text-white/60">
-                  DONGPENG
+                  HACKATHON
                 </div>
               </div>
             </div>
