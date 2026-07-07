@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { cookies } from "next/headers";
 import { signIn } from "@/auth";
 import { safeInternalPath } from "@/lib/iam";
 
@@ -25,15 +26,20 @@ export async function GET(req: NextRequest) {
   }
 
   if (!state || !stored.state || state !== stored.state) {
-    return NextResponse.redirect(new URL("/login?error=sso_state", req.url));
+    const res = NextResponse.redirect(new URL("/login?error=sso_state", req.url));
+    res.cookies.delete("iam_oauth_state");
+    return res;
   }
   if (!code) {
-    return NextResponse.redirect(new URL("/login?error=sso_code", req.url));
+    const res = NextResponse.redirect(new URL("/login?error=sso_code", req.url));
+    res.cookies.delete("iam_oauth_state");
+    return res;
   }
 
   const redirectTo = safeInternalPath(stored.callbackUrl || null, "/dashboard");
 
   try {
+    (await cookies()).delete("iam_oauth_state");
     // signIn 执行 iam authorize，成功后设置会话 cookie 并抛出 NEXT_REDIRECT 完成跳转
     return await signIn("iam", { code, redirectTo });
   } catch (e) {

@@ -30,13 +30,19 @@ export function getIamConfig(): IamConfig {
       "IAM 未正确配置：需要 IAM_CLIENT_ID / IAM_CLIENT_SECRET / IAM_BASE_URL / AUTH_URL"
     );
   }
-  return {
+  const config: IamConfig = {
     baseUrl: baseUrl.replace(/\/+$/, ""),
     clientId,
     clientSecret,
     redirectUri: `${authUrl.replace(/\/+$/, "")}/api/sso/iam/callback`,
     mock: process.env.IAM_MOCK === "true",
   };
+
+  if (process.env.IAM_MOCK === "true" && process.env.NODE_ENV === "production") {
+    throw new Error("IAM_MOCK 不可在生产环境启用");
+  }
+
+  return config;
 }
 
 export function buildAuthorizeUrl(cfg: IamConfig, state: string): string {
@@ -77,7 +83,12 @@ export function safeInternalPath(
   path: string | null | undefined,
   fallback: string
 ): string {
-  if (typeof path === "string" && path.startsWith("/") && !path.startsWith("//")) {
+  if (
+    typeof path === "string" &&
+    path.startsWith("/") &&
+    !path.startsWith("//") &&
+    !path.includes("\\")
+  ) {
     return path;
   }
   return fallback;

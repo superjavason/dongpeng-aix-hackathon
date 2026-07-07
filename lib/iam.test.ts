@@ -1,12 +1,20 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+
+vi.mock("@/lib/db", () => ({
+  prisma: { user: { upsert: vi.fn() } },
+}));
+
+import { prisma } from "@/lib/db";
 import {
   parseAccessToken,
   mapProfile,
   safeInternalPath,
   buildAuthorizeUrl,
   isIamEnabled,
+  findOrCreateSsoUser,
   type IamConfig,
 } from "@/lib/iam";
+import type { User } from "@prisma/client";
 
 const cfg: IamConfig = {
   baseUrl: "https://iam.dongpeng.net/esc-sso",
@@ -54,6 +62,9 @@ describe("safeInternalPath", () => {
     expect(safeInternalPath("https://evil.com", "/x")).toBe("/x");
     expect(safeInternalPath(null, "/x")).toBe("/x");
   });
+  it("rejects backslash paths that browsers may normalize into protocol-relative URLs", () => {
+    expect(safeInternalPath("/\\evil.com", "/x")).toBe("/x");
+  });
 });
 
 describe("buildAuthorizeUrl", () => {
@@ -82,5 +93,32 @@ describe("isIamEnabled", () => {
   it("false when absent", () => {
     delete process.env.IAM_CLIENT_ID;
     expect(isIamEnabled()).toBe(false);
+  });
+});
+
+describe("findOrCreateSsoUser", () => {
+  const baseUser: User = {
+    id: "u1",
+    ssoId: "x",
+    name: "y",
+    role: "participant",
+    email: null,
+    passwordHash: null,
+    disabled: false,
+  } as User;
+
+  it("returns the user when not disabled", async () => {
+    vi.mocked(prisma.user.upsert).mockResolvedValueOnce(baseUser);
+    const result = await findOrCreateSsoUser({ ssoId: "x", accountNo: "y" });
+    expect(result).toEqual(baseUser);
+  });
+
+  it("returns null when the user is disabled", async () => {
+    vi.mocked(prisma.user.upsert).mockResolvedValueOnce({
+      ...baseUser,
+      disabled: true,
+    });
+    const result = await findOrCreateSsoUser({ ssoId: "x", accountNo: "y" });
+    expect(result).toBeNull();
   });
 });
