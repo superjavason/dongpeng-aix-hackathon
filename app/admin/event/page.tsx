@@ -21,6 +21,7 @@ export default async function AdminEventPage() {
 
       <div className="mt-6">
         <EventSettings
+          key={event.id}
           eventId={event.id}
           phase={event.phase}
           criteria={getCriteria(event)}
