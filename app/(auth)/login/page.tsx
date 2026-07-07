@@ -77,11 +77,6 @@ function LoginForm() {
           立即注册
         </Link>
       </p>
-
-      <div className="mt-8 rounded-lg border bg-neutral-50 p-3 text-xs text-muted-foreground">
-        <p className="font-medium text-foreground">演示账号（密码 password123）</p>
-        <p className="mt-1">管理员 admin@dongpeng.com · 评委 judge1@dongpeng.com · 参赛者 user1@dongpeng.com</p>
-      </div>
     </div>
   );
 }
