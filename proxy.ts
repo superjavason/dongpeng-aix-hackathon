@@ -13,8 +13,7 @@ export default auth((req) => {
   const needLogin =
     path.startsWith("/dashboard") ||
     path.startsWith("/judge") ||
-    path.startsWith("/admin") ||
-    path === "/projects/new";
+    path.startsWith("/admin");
 
   if (needLogin && !user) {
     const url = new URL("/login", nextUrl);
@@ -34,5 +33,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/judge/:path*", "/admin/:path*", "/projects/new"],
+  matcher: ["/dashboard/:path*", "/judge/:path*", "/admin/:path*"],
 };
