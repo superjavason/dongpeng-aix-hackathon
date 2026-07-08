@@ -3,8 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // 运行时（Prisma Client）使用的连接串，可指向连接池（如 Neon pooler）。
+  url       = env("DATABASE_URL")
+  // 迁移引擎使用的直连串（不走连接池）。Prisma migrate 需要直连，
+  // Neon 用户请将主机名中的 "-pooler" 去掉。本地开发可与 DATABASE_URL 相同。
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -35,8 +39,9 @@ enum TeamRole {
 model User {
   id           String   @id @default(cuid())
   name         String
-  email        String   @unique
-  passwordHash String
+  email        String?  @unique
+  passwordHash String?
+  ssoId        String?  @unique
   role         Role     @default(participant)
   avatarUrl    String?
   bio          String?
@@ -47,6 +52,7 @@ model User {
   memberships   Membership[]
   assignments   JudgeAssignment[]
   scores        Score[]
+  likes         ProjectLike[]
 }
 
 model Event {
@@ -60,9 +66,11 @@ model Event {
   endAt            DateTime?
   scoreCriteria    Json // [{ key, label, weight, max }]
   resultsPublished Boolean    @default(false)
+  maxLikesPerUser  Int        @default(10) // 每用户每赛事点赞上限，后台可配置
   createdAt        DateTime   @default(now())
 
   projects Project[]
+  likes    ProjectLike[]
 }
 
 model Project {
@@ -81,6 +89,23 @@ model Project {
   owner       User         @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
   memberships Membership[]
   submission  Submission?
+  likes       ProjectLike[]
+}
+
+model ProjectLike {
+  id        String   @id @default(cuid())
+  eventId   String // 冗余存储，便于按赛事统计用户已用额度
+  projectId String
+  userId    String
+  createdAt DateTime @default(now())
+
+  event   Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId]) // 同一用户对同一项目至多 1 票
+  @@index([eventId, userId]) // 统计用户在该赛事已用票数
+  @@index([projectId]) // 统计项目得票数
 }
 
 model Membership {

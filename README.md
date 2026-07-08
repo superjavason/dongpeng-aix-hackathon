@@ -76,16 +76,29 @@ pnpm dev
 | `pnpm build` | 生产构建 |
 | `pnpm start` | 生产启动 |
 | `pnpm test` | 运行单元测试（评分/权限逻辑） |
-| `pnpm db:push` | 同步 Prisma schema 到数据库 |
+| `pnpm db:push` | 同步 Prisma schema 到数据库（仅本地原型开发，不生成迁移） |
 | `pnpm db:seed` | 写入演示数据 |
-| `pnpm db:reset` | 重置数据库并重新播种 |
+| `pnpm db:reset` | 重置数据库并重新播种（`db push --force-reset`，仅本地） |
+| `pnpm db:migrate` | 开发环境：修改 schema 后生成并应用迁移（`prisma migrate dev`） |
+| `pnpm db:migrate:deploy` | 生产环境：应用已提交的迁移（`prisma migrate deploy`） |
+| `pnpm db:migrate:status` | 查看迁移应用状态 |
+| `pnpm db:migrate:reset` | 重置数据库并重放全部迁移（仅本地） |
 
 ## 部署到 Vercel
 
 1. 创建 Vercel 项目并接入本仓库。
 2. 添加 **Vercel Postgres**（或 Neon）与 **Vercel Blob** 存储。
 3. 配置环境变量 `DATABASE_URL`、`AUTH_SECRET`、`BLOB_READ_WRITE_TOKEN`。
-4. 首次部署后执行 `pnpm db:push` 与 `pnpm db:seed`（可在本地连生产库执行）。
+4. 首次部署后写入演示数据：`pnpm db:seed`（可在本地连生产库执行）。
+
+### 数据库迁移（生产用 migration，不用 db push）
+
+生产环境用 **迁移**（migration）而非 `db push`，保证 schema 变更可版本化、可回溯、可安全重放。
+
+- **改表结构**：修改 `prisma/schema.prisma` 后本地执行 `pnpm db:migrate`，生成的迁移文件位于 `prisma/migrations/`，随代码一起提交。
+- **上线应用迁移**：构建流程保持不碰数据库，部署由人工在推送前后执行 `pnpm db:migrate:deploy`（连生产库）应用待执行迁移。
+- **直连要求**：Prisma migrate 需要**直连**（非连接池）。请另配 `DIRECT_URL` 环境变量；Neon 用户把 `DATABASE_URL` 主机名里的 `-pooler` 去掉即可，本地开发可与 `DATABASE_URL` 相同。应用运行时与 Vercel 构建（`prisma generate`）不需要 `DIRECT_URL`。
+- **首个迁移已基线化**：现有库（本地 + Neon 生产）此前用 `db push` 建表，已通过 `prisma migrate resolve --applied 0_init` 标记基线迁移为「已应用」，两库均 *up to date*，后续新增迁移会正常叠加。
 
 ## 技术要点
 

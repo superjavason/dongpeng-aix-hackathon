@@ -1,12 +1,12 @@
 import { prisma } from "@/lib/db";
-import { getActiveEvent } from "@/lib/event";
+import { getAdminEvent } from "@/lib/event";
 import { Card, CardContent } from "@/components/ui/card";
 import { AssignmentMatrix } from "@/components/admin/assignment-matrix";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminJudgesPage() {
-  const event = await getActiveEvent();
+  const event = await getAdminEvent();
 
   const [judges, submissions, assignments] = await Promise.all([
     prisma.user.findMany({

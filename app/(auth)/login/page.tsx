@@ -71,6 +71,26 @@ function LoginForm() {
         </Button>
       </form>
 
+      {process.env.NEXT_PUBLIC_IAM_ENABLED === "true" && (
+        <div className="mt-6">
+          <div className="relative flex items-center py-1">
+            <div className="flex-grow border-t" />
+            <span className="mx-3 text-xs text-muted-foreground">或</span>
+            <div className="flex-grow border-t" />
+          </div>
+          <a
+            href={`/api/sso/iam/start${
+              callbackUrl ? `?callbackUrl=${encodeURIComponent(callbackUrl)}` : ""
+            }`}
+            className="block"
+          >
+            <Button type="button" variant="outline" className="mt-3 w-full" size="lg">
+              东鹏企业登录（IAM）
+            </Button>
+          </a>
+        </div>
+      )}
+
       <p className="mt-6 text-center text-sm text-muted-foreground">
         还没有账号？{" "}
         <Link href="/register" className="font-medium text-primary hover:underline">

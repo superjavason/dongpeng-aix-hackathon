@@ -14,11 +14,13 @@ import { getSessionUser } from "@/lib/session";
 import { can } from "@/lib/permissions";
 import { PHASE_LABELS } from "@/lib/constants";
 import { parseProjectDescription } from "@/lib/project-description";
+import { getLikeState } from "@/lib/likes";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ApplyButton } from "@/components/project/apply-button";
+import { LikeButton } from "@/components/project/like-button";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +35,7 @@ export default async function ProjectDetailPage({
       where: { id },
       include: {
         owner: { select: { id: true, name: true } },
+        event: { select: { maxLikesPerUser: true } },
         memberships: {
           include: { user: { select: { id: true, name: true } } },
           orderBy: { createdAt: "asc" },
@@ -59,6 +62,14 @@ export default async function ProjectDetailPage({
     : undefined;
   const isOwner = user?.id === project.ownerId;
   const isMember = !!myMembership;
+  const isOwnProject = isOwner || myMembership?.status === "approved";
+
+  const likeState = await getLikeState(
+    project.eventId,
+    project.id,
+    user?.id,
+    project.event.maxLikesPerUser
+  );
 
   const showApply =
     !!user &&
@@ -178,6 +189,26 @@ export default async function ProjectDetailPage({
           </div>
 
           <div className="space-y-4">
+            <Card className="rounded-3xl shadow-xl shadow-black/5">
+              <CardContent className="p-5">
+                <div className="mb-3 flex items-center justify-between">
+                  <h3 className="text-sm font-semibold">观众人气</h3>
+                  <span className="text-xs text-muted-foreground">
+                    支持你喜欢的项目
+                  </span>
+                </div>
+                <LikeButton
+                  projectId={project.id}
+                  loggedIn={!!user}
+                  isOwnProject={isOwnProject}
+                  initialLiked={likeState.liked}
+                  initialCount={likeState.likeCount}
+                  initialRemaining={likeState.remaining}
+                  max={likeState.max}
+                />
+              </CardContent>
+            </Card>
+
             <Card className="rounded-3xl shadow-xl shadow-black/5">
               <CardContent className="space-y-4 p-5">
                 <div className="flex items-center justify-between text-sm">

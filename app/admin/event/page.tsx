@@ -1,10 +1,10 @@
-import { getActiveEvent, getCriteria } from "@/lib/event";
+import { getAdminEvent, getCriteria } from "@/lib/event";
 import { EventSettings } from "@/components/admin/event-settings";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminEventPage() {
-  const event = await getActiveEvent();
+  const event = await getAdminEvent();
 
   if (!event) {
     return (
@@ -21,10 +21,12 @@ export default async function AdminEventPage() {
 
       <div className="mt-6">
         <EventSettings
+          key={event.id}
           eventId={event.id}
           phase={event.phase}
           criteria={getCriteria(event)}
           resultsPublished={event.resultsPublished}
+          maxLikesPerUser={event.maxLikesPerUser}
         />
       </div>
     </main>

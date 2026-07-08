@@ -9,6 +9,7 @@ const PASSWORD = "password123";
 async function main() {
   console.log("🌱 开始播种数据…");
 
+  await prisma.projectLike.deleteMany();
   await prisma.score.deleteMany();
   await prisma.judgeAssignment.deleteMany();
   await prisma.submission.deleteMany();
@@ -148,6 +149,8 @@ async function main() {
 
   const criteria = DEFAULT_CRITERIA;
   const submissionsForScore: { id: string }[] = [];
+  // 记录项目及其「参与者」用户 id（发起人 + 已通过成员），用于播种人气点赞时避开本人项目
+  const createdProjects: { id: string; participantIds: Set<string> }[] = [];
 
   for (const d of defs) {
     const project = await prisma.project.create({
@@ -192,6 +195,34 @@ async function main() {
         },
       });
       submissionsForScore.push(submission);
+    }
+
+    createdProjects.push({
+      id: project.id,
+      participantIds: new Set([
+        users[d.owner].id,
+        ...d.approved.map((i) => users[i].id),
+      ]),
+    });
+  }
+
+  // 预置人气点赞：每位参赛者为若干个「非本人参与」的项目点赞（额度上限内），演示人气榜
+  for (let u = 0; u < users.length; u++) {
+    const voter = users[u];
+    const likable = createdProjects.filter(
+      (p) => !p.participantIds.has(voter.id)
+    );
+    // 借用用户序号做确定性数量，避免随机导致每次 seed 结果不一致
+    const takeCount = Math.min(likable.length, (u % 3) + 2);
+    const targets = likable.slice(0, takeCount);
+    if (targets.length > 0) {
+      await prisma.projectLike.createMany({
+        data: targets.map((p) => ({
+          eventId: event.id,
+          projectId: p.id,
+          userId: voter.id,
+        })),
+      });
     }
   }
 
