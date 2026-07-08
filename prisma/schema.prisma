@@ -3,8 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // 运行时（Prisma Client）使用的连接串，可指向连接池（如 Neon pooler）。
+  url       = env("DATABASE_URL")
+  // 迁移引擎使用的直连串（不走连接池）。Prisma migrate 需要直连，
+  // Neon 用户请将主机名中的 "-pooler" 去掉。本地开发可与 DATABASE_URL 相同。
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
