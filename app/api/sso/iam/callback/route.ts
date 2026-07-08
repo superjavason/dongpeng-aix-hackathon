@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 import { signIn } from "@/auth";
-import { safeInternalPath } from "@/lib/iam";
+import { safeInternalPath, resolveAppUrl } from "@/lib/iam";
 
 function isNextRedirect(e: unknown): boolean {
   return (
@@ -26,12 +26,12 @@ export async function GET(req: NextRequest) {
   }
 
   if (!state || !stored.state || state !== stored.state) {
-    const res = NextResponse.redirect(new URL("/login?error=sso_state", req.url));
+    const res = NextResponse.redirect(resolveAppUrl("/login?error=sso_state", req.url));
     res.cookies.delete("iam_oauth_state");
     return res;
   }
   if (!code) {
-    const res = NextResponse.redirect(new URL("/login?error=sso_code", req.url));
+    const res = NextResponse.redirect(resolveAppUrl("/login?error=sso_code", req.url));
     res.cookies.delete("iam_oauth_state");
     return res;
   }
@@ -44,6 +44,6 @@ export async function GET(req: NextRequest) {
     return await signIn("iam", { code, redirectTo });
   } catch (e) {
     if (isNextRedirect(e)) throw e; // 让 Next 处理成功后的重定向
-    return NextResponse.redirect(new URL("/login?error=sso_failed", req.url));
+    return NextResponse.redirect(resolveAppUrl("/login?error=sso_failed", req.url));
   }
 }

@@ -79,6 +79,15 @@ export function mapProfile(data: unknown): IamProfile | null {
   return { ssoId: obj.id, accountNo };
 }
 
+/**
+ * 用对外域名（AUTH_URL）作为基准拼跳转地址，避免在反向代理后拿到内部 origin
+ * （如 localhost:3002）。AUTH_URL 未配置时回退到请求自身的 url。
+ */
+export function resolveAppUrl(path: string, requestUrl: string): URL {
+  const base = process.env.AUTH_URL?.replace(/\/+$/, "");
+  return new URL(path, base || requestUrl);
+}
+
 export function safeInternalPath(
   path: string | null | undefined,
   fallback: string

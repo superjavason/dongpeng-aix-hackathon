@@ -5,11 +5,12 @@ import {
   getIamConfig,
   buildAuthorizeUrl,
   safeInternalPath,
+  resolveAppUrl,
 } from "@/lib/iam";
 
 export async function GET(req: NextRequest) {
   if (!isIamEnabled()) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(resolveAppUrl("/login", req.url));
   }
 
   const cfg = getIamConfig();
