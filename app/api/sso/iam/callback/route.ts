@@ -15,9 +15,8 @@ function isNextRedirect(e: unknown): boolean {
 
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
-  const state = req.nextUrl.searchParams.get("state");
 
-  let stored: { state?: string; callbackUrl?: string } = {};
+  let stored: { callbackUrl?: string } = {};
   const raw = req.cookies.get("iam_oauth_state")?.value;
   try {
     stored = raw ? JSON.parse(raw) : {};
@@ -25,11 +24,6 @@ export async function GET(req: NextRequest) {
     stored = {};
   }
 
-  if (!state || !stored.state || state !== stored.state) {
-    const res = NextResponse.redirect(resolveAppUrl("/login?error=sso_state", req.url));
-    res.cookies.delete("iam_oauth_state");
-    return res;
-  }
   if (!code) {
     const res = NextResponse.redirect(resolveAppUrl("/login?error=sso_code", req.url));
     res.cookies.delete("iam_oauth_state");

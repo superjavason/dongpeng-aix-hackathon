@@ -45,12 +45,11 @@ export function getIamConfig(): IamConfig {
   return config;
 }
 
-export function buildAuthorizeUrl(cfg: IamConfig, state: string): string {
+export function buildAuthorizeUrl(cfg: IamConfig): string {
   const params = new URLSearchParams({
     client_id: cfg.clientId,
     response_type: "code",
     redirect_uri: cfg.redirectUri,
-    state,
   });
   return `${cfg.baseUrl}${OAUTH_PATH}/authorize?${params.toString()}`;
 }

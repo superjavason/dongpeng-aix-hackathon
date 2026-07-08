@@ -69,11 +69,11 @@ describe("safeInternalPath", () => {
 
 describe("buildAuthorizeUrl", () => {
   it("includes required oauth params", () => {
-    const url = buildAuthorizeUrl(cfg, "state123");
+    const url = buildAuthorizeUrl(cfg);
     expect(url).toContain("https://iam.dongpeng.net/esc-sso/oauth2.0/authorize?");
     expect(url).toContain("client_id=cid");
     expect(url).toContain("response_type=code");
-    expect(url).toContain("state=state123");
+    expect(url).not.toContain("state=");
     expect(url).toContain(
       "redirect_uri=https%3A%2F%2Fapp.example.com%2Fapi%2Fsso%2Fiam%2Fcallback"
     );

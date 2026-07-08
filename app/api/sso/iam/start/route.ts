@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { randomUUID } from "node:crypto";
 import {
   isIamEnabled,
   getIamConfig,
@@ -14,18 +13,18 @@ export async function GET(req: NextRequest) {
   }
 
   const cfg = getIamConfig();
-  const state = randomUUID();
   const callbackUrl = safeInternalPath(
     req.nextUrl.searchParams.get("callbackUrl"),
     ""
   );
 
   const target = cfg.mock
-    ? `${cfg.redirectUri}?code=mock-code&state=${encodeURIComponent(state)}`
-    : buildAuthorizeUrl(cfg, state);
+    ? `${cfg.redirectUri}?code=mock-code`
+    : buildAuthorizeUrl(cfg);
 
   const res = NextResponse.redirect(target);
-  res.cookies.set("iam_oauth_state", JSON.stringify({ state, callbackUrl }), {
+  // state 为可选参数，IAM 回传状态不稳定，故不传递；仅用 cookie 携带 callbackUrl
+  res.cookies.set("iam_oauth_state", JSON.stringify({ callbackUrl }), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
